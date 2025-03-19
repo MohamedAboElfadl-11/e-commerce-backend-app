@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
-import *as constants from "../../Constants/constants";
+import *as constants from "../../Constants/constants.js";
+import { encryption, hashing } from "../../Utils/crypto.utils.js";
 
 const userSchema = new mongoose.Schema({
     email: { // using in login
@@ -33,10 +34,6 @@ const userSchema = new mongoose.Schema({
         enum: Object.values(constants.gender),
         default: constants.gender.NON
     },
-    verifyEmail: {
-        type: Boolean,
-        default: false
-    },
     role: {
         type: String,
         enum: Object.values(constants.roles),
@@ -46,11 +43,39 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    verificationCode: {
+        code: {
+            type: String,
+        },
+        expDate: {
+            type: Date,
+        }
+    },
+    isAccountConfirmed: {
+        type: Boolean,
+        default: false
+    },
+    profilePic: {
+        secure_url: String,
+        public_id: String
+    },
+    coverPic: {
+        secure_url: String,
+        public_id: String
+    },
+    changeCredentialTime: Date,
+    deletedAt: Date,
+    bannedAt: Date,
     DOB: Date,
     bio: String,
 }, {
     timestamps: true
 });
+
+userSchema.pre('save', async function () {
+    if (this.isModified('phone')) this.phone = encryption(this.phone, process.env.SECRET_KEY)
+    if (this.isModified('password')) this.password = hashing(this.password, +process.env.SALT)
+})
 
 const UserModel = mongoose.models.users || mongoose.model('users', userSchema);
 export default UserModel
