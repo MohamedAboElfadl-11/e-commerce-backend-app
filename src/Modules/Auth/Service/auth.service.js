@@ -1,17 +1,16 @@
 import UserModel from "../../../Database/Models/user.model.js";
 import { emitter } from "../../../Services/sendEmail.service.js";
 import emailTemplate from "../../../Templates/sendVirficatioEmail.templets.js";
+import { comparing } from "../../../Utils/crypto.utils.js";
 import genOtp from "../../../Utils/genOtp.utils.js";
+import jwt from "jsonwebtoken"
+import { v4 as uuidv4 } from "uuid";
 
 // signup service create user account
 export const signupService = async (req, res) => {
     const userDate = req.body;
     const isUserExist = await UserModel.findOne({
-        $or:
-            [
-                { email: userDate.email },
-                { username: userDate.username }
-            ]
+        $or: [{ email: userDate.email }, { username: userDate.username }]
     });
 
     if (isUserExist) return res.status(400).json({ message: "user already exist" });
@@ -29,4 +28,31 @@ export const signupService = async (req, res) => {
 
     await UserModel.create(userDate);
     res.status(200).json({ message: 'Account created successfully, please check your mail box to confirm your account' });
+}
+
+// login service
+export const loginService = async (req, res) => {
+    const userCredentials = req.body;
+    const user = await UserModel.findOne({
+        $or: [{ email: userCredentials.email }, { username: userCredentials.username }]
+    })
+    if (!user
+        || (user.deletedAt && user.deletedAt <= new Date())
+        || (user.bannedAt && user.bannedAt <= new Date())
+    ) return res.status(400).json({ message: "wrong email or password" })
+    const password = await comparing(userCredentials.password, user.password);
+    if (!password) return res.status(400).json({ message: "wrong email or password" })
+    user.lastLogin = new Date()
+    await user.save()
+    const accesstoken = jwt.sign(
+        { _id: user._id, email: user.email },
+        process.env.ACCESS_TOKEN,
+        { expiresIn: '7d', jwtid: uuidv4() }
+    );
+    const refreshtoken = jwt.sign(
+        { _id: user._id, email: user.email },
+        process.env.REFRESH_TOKEN,
+        { expiresIn: '7d', jwtid: uuidv4() }
+    )
+    res.status(200).json({ message: 'Login successfully', tokens: { accesstoken, refreshtoken } })
 }

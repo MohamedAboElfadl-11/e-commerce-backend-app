@@ -11,4 +11,6 @@ authRoters.post('/signup',
     errorHandlerMiddleware(auth.signupService)
 )
 
+authRoters.post('/login', auth.loginService)
+
 export default authRoters
