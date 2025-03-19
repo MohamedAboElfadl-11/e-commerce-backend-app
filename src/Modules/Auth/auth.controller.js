@@ -2,15 +2,18 @@ import { Router } from "express";
 import * as auth from "./Service/auth.service.js";
 import { errorHandlerMiddleware } from "../../Middlewares/errorHandler.middleware.js";
 import { validationMiddleware } from "../../Middlewares/validation.middleware.js";
-import { signupSchema } from "../../Validation/auth.validation.js";
+import * as  validators from "../../Validation/auth.validation.js";
 
 const authRoters = Router();
 
 authRoters.post('/signup',
-    validationMiddleware(signupSchema),
+    validationMiddleware(validators.signupSchema),
     errorHandlerMiddleware(auth.signupService)
 )
 
-authRoters.post('/login', auth.loginService)
+authRoters.post('/login',
+    validationMiddleware(validators.loginSchema),
+    errorHandlerMiddleware(auth.loginService),
+)
 
 export default authRoters

@@ -24,3 +24,11 @@ export const signupSchema = {
         bio: Joi.string().max(255),
     })
 }
+
+export const loginSchema = {
+    body: Joi.object({
+        email: Joi.string().email().optional(),
+        username: Joi.string().alphanum().min(3).max(30).optional(),
+        password: Joi.string().min(8).max(30).required()
+    }).xor('email', 'username')
+}
