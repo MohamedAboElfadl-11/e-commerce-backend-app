@@ -16,4 +16,8 @@ authRoters.post('/login',
     errorHandlerMiddleware(auth.loginService),
 )
 
+authRoters.post('/verify-account',
+    errorHandlerMiddleware(auth.verifyAccountService)
+)
+
 export default authRoters

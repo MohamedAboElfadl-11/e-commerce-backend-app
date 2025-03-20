@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import UserModel from "../../../Database/Models/user.model.js";
 import { emitter } from "../../../Services/sendEmail.service.js";
 import emailTemplate from "../../../Templates/sendVirficatioEmail.templets.js";
@@ -28,6 +29,25 @@ export const signupService = async (req, res) => {
 
     await UserModel.create(userDate);
     res.status(200).json({ message: 'Account created successfully, please check your mail box to confirm your account' });
+}
+
+// verify user account
+export const verifyAccountService = async (req, res) => {
+    const { email, otp } = req.body;
+    const user = await UserModel.findOne({ email, isAccountConfirmed: false })
+    if (!user) return res.status(404).json({ message: "user not found" });
+    const { code, expDate } = user.verificationCode
+    console.log(user.verificationCode)
+    const isOtpMatch = await comparing(otp, code)
+    if (!isOtpMatch || DateTime.now() > expDate) return res.status(400).json({ message: 'otp has expired' });
+    await UserModel.updateOne(
+        { _id: user._id },
+        {
+            $set: { isAccountConfirmed: true },
+            $unset: { verificationCode: '' }
+        }
+    );
+    res.status(200).json({ message: 'Account confirmed successfully' })
 }
 
 // login service
