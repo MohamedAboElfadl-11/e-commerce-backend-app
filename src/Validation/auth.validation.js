@@ -32,3 +32,33 @@ export const loginSchema = {
         password: Joi.string().min(8).max(30).required()
     }).xor('email', 'username')
 }
+
+export const verifyAccountSchema = {
+    body: Joi.object({
+        email: Joi.string().email().optional(),
+        otp: Joi.string().length(6).pattern(/^\d{6}$/).required()
+    })
+}
+
+export const forgetPasswordSchema = {
+    body: Joi.object({
+        email: Joi.string().email().optional(),
+    })
+}
+
+export const resetPasswordSchema = {
+    body: Joi.object({
+        email: Joi.string().email().optional(),
+        otp: Joi.string().length(6).pattern(/^\d{6}$/).required(),
+        password: Joi.string().min(8).max(30).required().pattern(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*])[A-Za-z\d@$!%*]{8,}$/
+        ).messages({
+            "string.empty": "Password is required",
+            "string.min": "Password must be at least 8 characters",
+            "string.max": "Password must be at most 30 characters"
+        }),
+        confirmedPassword: Joi.string().valid(Joi.ref("password")).required().messages({
+            "any.only": "Passwords do not match"
+        }),
+    })
+}

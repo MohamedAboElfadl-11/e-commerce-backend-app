@@ -9,3 +9,8 @@ export const roles = {
     ADMIN: 'admin',
     SALER: 'saler'
 }
+
+export const otpCodeType = {
+    VERIFY_ACCOUNT: 'verifyAccount',
+    RESET_PASSWORD:'resetPassword'
+}

@@ -6,12 +6,14 @@ const userSchema = new mongoose.Schema({
     email: { // using in login
         type: String,
         unique: true,
-        required: true
+        required: true,
+        index: true
     },
     username: { // using in login
         type: String,
         unique: true,
-        required: true
+        required: true,
+        index: true
     },
     firstName: {
         type: String,
@@ -43,14 +45,18 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    verificationCode: {
+    userOtps: [{
         code: {
             type: String,
+        },
+        codeType: {
+            type: String,
+            enum: Object.values(constants.otpCodeType)
         },
         expDate: {
             type: Date,
         }
-    },
+    }],
     isAccountConfirmed: {
         type: Boolean,
         default: false
