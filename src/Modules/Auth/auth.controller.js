@@ -3,6 +3,7 @@ import * as auth from "./Service/auth.service.js";
 import { errorHandlerMiddleware } from "../../Middlewares/errorHandler.middleware.js";
 import { validationMiddleware } from "../../Middlewares/validation.middleware.js";
 import * as  validators from "../../Validation/auth.validation.js";
+import authenticationMiddlware from "../../Middlewares/authentication.middleware.js";
 
 const authRouters = Router();
 
@@ -33,5 +34,10 @@ authRouters.patch('/reset-password',
 
 authRouters.get('/genRefreshToken',
     errorHandlerMiddleware(auth.refreshTokenService)
+)
+
+authRouters.get('/logout',
+    errorHandlerMiddleware(authenticationMiddlware()),
+    errorHandlerMiddleware(auth.logoutService)
 )
 export default authRouters

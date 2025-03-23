@@ -165,4 +165,25 @@ export const refreshTokenService = async (req, res) => {
     res.status(200).json({ message: "Token refershed successfully", accesstoken });
 }
 
-
+// logout service
+export const logoutService = async (req, res) => {
+    const { tokenId, expiryDate } = req.loginUser.token;
+    const { refreshtoken } = req.headers
+    const decodedRefreshToken = jwt.verify(refreshtoken, process.env.REFRESH_TOKEN)
+    const existingTokens = await BlackListTokensModel.find({
+        tokenId: { $in: [tokenId, decodedRefreshToken.jti] }
+    });
+    if (existingTokens.length > 0) {
+        return res.status(400).json({ message: "Token already blacklisted" });
+    }
+    await BlackListTokensModel.insertMany([
+        {
+            tokenId, expiryDate
+        },
+        {
+            tokenId: decodedRefreshToken.jti,
+            expiryDate: decodedRefreshToken.exp
+        }
+    ]);
+    res.status(200).json({ message: "User logged out successfully" });
+}
