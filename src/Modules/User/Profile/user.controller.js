@@ -22,4 +22,8 @@ profileRouters.patch('/change-password',
     errorHandlerMiddleware(profile.changePasswordService)
 )
 
+profileRouters.delete('/delete-account',
+    errorHandlerMiddleware(profile.deleteAccountService)
+)
+
 export default profileRouters;

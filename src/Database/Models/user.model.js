@@ -71,7 +71,7 @@ const userSchema = new mongoose.Schema({
     },
     changeCredentialTime: Date,
     deletedAt: Date,
-    bannedAt: Date,
+    bannedAt: Date, // admin
     DOB: Date,
     bio: String,
 }, {

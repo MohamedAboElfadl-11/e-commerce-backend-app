@@ -3,8 +3,8 @@ import { comparing } from "../../../../Utils/crypto.utils.js";
 // get profile service
 export const getProfileService = async (req, res) => {
     const user = req.loginUser;
-    const { email, firstName, lastName, gender, phone, DOB, username, password } = user;
-    const userData = { email, firstName, lastName, gender, phone, DOB, username, password };
+    const { email, firstName, lastName, gender, phone, DOB, username } = user;
+    const userData = { email, firstName, lastName, gender, phone, DOB, username };
     res.status(200).json({ profile: userData })
 }
 
@@ -31,4 +31,12 @@ export const changePasswordService = async (req, res) => {
     user.password = updatedPasswordData.password;
     await user.save()
     res.status(200).json({ message: 'password changed successfully' })
+}
+
+// delete account service
+export const deleteAccountService = async (req, res) => {
+    const user = req.loginUser;
+    user.deletedAt = new Date();
+    await user.save();
+    res.status(200).json({ message: 'account deleted successfully' })
 }

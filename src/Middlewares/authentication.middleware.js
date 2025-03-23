@@ -11,6 +11,7 @@ const authenticationMiddlware = () => {
         if (isTokenBlackListed) return res.status(401).json({ message: "Token expired please, Login again" })
         const user = await UserModel.findById(decodedAccesstoken._id)
         if (!user) return res.status(404).json({ message: "user not found please, signup" })
+        if (user.deletedAt) return res.status(400).json({ message: 'this account is deleted' })
         req.loginUser = user;
         req.loginUser.token = {
             tokenId: decodedAccesstoken.jti,
