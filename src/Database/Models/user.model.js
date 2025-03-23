@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import *as constants from "../../Constants/constants.js";
-import { encryption, hashing } from "../../Utils/crypto.utils.js";
+import { decryption, encryption, hashing } from "../../Utils/crypto.utils.js";
 
 const userSchema = new mongoose.Schema({
     email: { // using in login
@@ -81,6 +81,10 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save', async function () {
     if (this.isModified('phone')) this.phone = encryption(this.phone, process.env.SECRET_KEY)
     if (this.isModified('password')) this.password = hashing(this.password, +process.env.SALT)
+})
+
+userSchema.post('findOne', async function (doc) {
+    if (doc.phone) doc.phone = decryption(doc.phone, process.env.SECRET_KEY);
 })
 
 const UserModel = mongoose.models.users || mongoose.model('users', userSchema);

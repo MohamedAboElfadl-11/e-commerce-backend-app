@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import * as constants from '../Constants/constants.js'
+import * as constants from '../../../Constants/constants.js'
 
 export const signupSchema = {
     body: Joi.object({

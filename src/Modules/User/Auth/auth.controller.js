@@ -1,9 +1,9 @@
 import { Router } from "express";
 import * as auth from "./Service/auth.service.js";
-import { errorHandlerMiddleware } from "../../Middlewares/errorHandler.middleware.js";
-import { validationMiddleware } from "../../Middlewares/validation.middleware.js";
-import * as  validators from "../../Validation/auth.validation.js";
-import authenticationMiddlware from "../../Middlewares/authentication.middleware.js";
+import { errorHandlerMiddleware } from "../../../Middlewares/errorHandler.middleware.js";
+import { validationMiddleware } from "../../../Middlewares/validation.middleware.js";
+import authenticationMiddlware from "../../../Middlewares/authentication.middleware.js";
+import * as  validators from "../../../Validation/User/Auth/auth.validation.js";
 
 const authRouters = Router();
 

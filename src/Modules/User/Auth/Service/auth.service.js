@@ -1,13 +1,13 @@
 import { DateTime } from "luxon";
-import UserModel from "../../../Database/Models/user.model.js";
-import { emitter } from "../../../Services/sendEmail.service.js";
-import emailTemplate from "../../../Templates/sendVirficatioEmail.templets.js";
-import { comparing } from "../../../Utils/crypto.utils.js";
-import genOtp from "../../../Utils/genOtp.utils.js";
+import UserModel from "../../../../Database/Models/user.model.js";
+import { emitter } from "../../../../Services/sendEmail.service.js";
+import emailTemplate from "../../../../Templates/sendVirficatioEmail.templets.js";
+import { comparing } from "../../../../Utils/crypto.utils.js";
+import genOtp from "../../../../Utils/genOtp.utils.js";
 import jwt from "jsonwebtoken"
 import { v4 as uuidv4 } from "uuid";
-import { otpCodeType } from "../../../Constants/constants.js";
-import BlackListTokensModel from "../../../Database/Models/blackListTokens.model.js";
+import { otpCodeType } from "../../../../Constants/constants.js";
+import BlackListTokensModel from "../../../../Database/Models/blackListTokens.model.js";
 
 // signup service create user account
 export const signupService = async (req, res) => {
@@ -159,7 +159,7 @@ export const refreshTokenService = async (req, res) => {
         },
         process.env.ACCESS_TOKEN,
         {
-            expiresIn: '1h', jwtid: uuidv4()
+            expiresIn: '7d', jwtid: uuidv4()
         }
     )
     res.status(200).json({ message: "Token refershed successfully", accesstoken });

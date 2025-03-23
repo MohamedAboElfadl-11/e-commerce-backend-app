@@ -1,8 +1,10 @@
 import { globalErrorHandler } from "../Middlewares/errorHandler.middleware.js"
-import authRoters from "../Modules/Auth/auth.controller.js"
+import authRouters from "../Modules/User/Auth/auth.controller.js"
+import profileRouters from "../Modules/User/Profile/user.controller.js"
 
 const controllerHandler = (app) => {
-    app.use('/auth', authRoters)
+    app.use('/auth', authRouters)
+    app.use('/profile', profileRouters)
     app.use(globalErrorHandler)
 }
 
