@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import *as constants from "../../Constants/constants.js";
 import { decryption, encryption, hashing } from "../../Utils/crypto.utils.js";
 
-const userSchema = new mongoose.Schema({
+const userDatabaseSchema = new mongoose.Schema({
     email: { // using in login
         type: String,
         unique: true,
@@ -78,14 +78,14 @@ const userSchema = new mongoose.Schema({
     timestamps: true
 });
 
-userSchema.pre('save', async function () {
+userDatabaseSchema.pre('save', async function () {
     if (this.isModified('phone')) this.phone = encryption(this.phone, process.env.SECRET_KEY)
     if (this.isModified('password')) this.password = hashing(this.password, +process.env.SALT)
 })
 
-userSchema.post('findOne', async function (doc) {
+userDatabaseSchema.post('findOne', async function (doc) {
     if (doc.phone) doc.phone = decryption(doc.phone, process.env.SECRET_KEY);
 })
 
-const UserModel = mongoose.models.users || mongoose.model('users', userSchema);
+const UserModel = mongoose.models.users || mongoose.model('users', userDatabaseSchema);
 export default UserModel
