@@ -6,8 +6,7 @@ export const gender = {
 
 export const roles = {
     USER: 'user',
-    ADMIN: 'admin',
-    SALER: 'saler'
+    ADMIN: 'admin'
 }
 
 export const otpCodeType = {
