@@ -31,11 +31,6 @@ const productDatabaseSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    seller: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'sellers'
-    },
 }, {
     timestamps: true
 });

@@ -3,13 +3,10 @@ import mongoose from "mongoose";
 const categoryDatabaseSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true,
     },
     description: {
-        type: String,
-        required: true
-    },
-    name: {
         type: String,
         required: true
     },

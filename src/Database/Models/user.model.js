@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import *as constants from "../../Constants/constants.js";
+import * as constants from "../../Constants/constants.js";
 import { decryption, encryption, hashing } from "../../Utils/crypto.utils.js";
 
 const userDatabaseSchema = new mongoose.Schema({
